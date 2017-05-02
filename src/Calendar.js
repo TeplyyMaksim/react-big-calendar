@@ -563,7 +563,7 @@ class Calendar extends React.Component {
 
    date = moveDate(action, newDate || date, ViewComponent)
 
-   onNavigate(date, view)
+   onNavigate(date, view, action)
  };
 
  handleViewChange = (view) => {
