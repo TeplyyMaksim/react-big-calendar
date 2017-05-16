@@ -121,6 +121,8 @@ class Calendar extends React.Component {
     * ```js
     * function(event: object, e: SyntheticEvent)
     * ```
+    *
+    * @controllable selected
     */
    onSelectEvent: PropTypes.func,
 
@@ -134,6 +136,11 @@ class Calendar extends React.Component {
     * ```
     */
    onSelecting: PropTypes.func,
+     
+   /**
+    * The selected event, if any.
+    */
+   selected: PropTypes.object,
 
    /**
     * An array of built-in view names to allow the calendar to display.
