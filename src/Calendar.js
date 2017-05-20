@@ -131,7 +131,6 @@ class Calendar extends React.Component {
     * ```
     */
    onSelecting: PropTypes.func,
-     
    /**
     * The selected event, if any.
     */
@@ -427,6 +426,7 @@ class Calendar extends React.Component {
      }),
      month: PropTypes.shape({
        header: elementType,
+       dateHeader: elementType,
        event: elementType
      })
    }),
