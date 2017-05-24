@@ -6,6 +6,7 @@ import dates from './utils/dates';
 import { elementType } from './utils/propTypes';
 import BackgroundWrapper from './BackgroundWrapper';
 import TimeSlotGroup from './TimeSlotGroup'
+import moment from 'moment'
 
 export default class TimeColumn extends Component {
   static propTypes = {
@@ -19,8 +20,8 @@ export default class TimeColumn extends Component {
     timeGutterFormat: PropTypes.string,
     type: PropTypes.string.isRequired,
     className: PropTypes.string,
-
     dayWrapperComponent: elementType,
+    dynamicSlots: PropTypes.bool
   }
   static defaultProps = {
     step: 30,
@@ -29,11 +30,13 @@ export default class TimeColumn extends Component {
     type: 'day',
     className: '',
     dayWrapperComponent: BackgroundWrapper,
+    dynamicSlots: false
   }
 
-  renderTimeSliceGroup(key, isNow, date) {
+  renderTimeSliceGroup(key, isNow, date, stepOpt) {
     const { dayWrapperComponent, timeslots, showLabels, step, timeGutterFormat, culture } = this.props;
 
+    var tt = stepOpt / step
     return (
       <TimeSlotGroup
         key={key}
@@ -41,7 +44,7 @@ export default class TimeColumn extends Component {
         value={date}
         step={step}
         culture={culture}
-        timeslots={timeslots}
+        timeslots={tt}
         showLabels={showLabels}
         timeGutterFormat={timeGutterFormat}
         dayWrapperComponent={dayWrapperComponent}
@@ -50,8 +53,8 @@ export default class TimeColumn extends Component {
   }
 
   render() {
-    const { className, children, style, now, min, max, step, timeslots } = this.props;
-    const totalMin = dates.diff(min, max, 'minutes')
+    const { className, children, style, now, min, max, step, timeslots, dynamicSlots } = this.props;
+   const totalMin = dates.diff(min, max, 'minutes')
     const numGroups = Math.ceil(totalMin / (step * timeslots))
     const renderedSlots = []
     const groupLengthInMinutes = step * timeslots
@@ -60,18 +63,31 @@ export default class TimeColumn extends Component {
     let next = date
     let isNow = false
 
-    for (var i = 0; i < numGroups; i++) {
-      isNow = dates.inRange(
-          now
-        , date
-        , dates.add(next, groupLengthInMinutes - 1, 'minutes')
-        , 'minutes'
-      )
+    var hours = [8, 9, 10, 12, 16, 18];
 
-      next = dates.add(date, groupLengthInMinutes, 'minutes');
-      renderedSlots.push(this.renderTimeSliceGroup(i, isNow, date))
+    if (dynamicSlots) {
+      for (var i = 0; i < hours.length -1; i++){
+        var hour = hours[i]
+        var start = moment(date).hour(hour)
+        var end = moment(date).hour(hours[i+1])
+        var stepOpt = end.diff(start, 'minutes')
+        var res = this.renderTimeSliceGroup(i, false, date, stepOpt)
+        renderedSlots.push(res)
+        date = dates.add(date, stepOpt, 'minutes')
+      }
+    } else {
+      for (var i = 0; i < numGroups; i++) {
+        isNow = dates.inRange(
+            now
+            , date
+            , dates.add(next, groupLengthInMinutes - 1, 'minutes')
+            , 'minutes'
+        )
 
-      date = next
+        next = dates.add(date, groupLengthInMinutes, 'minutes');
+        renderedSlots.push(this.renderTimeSliceGroup(i, isNow, date))
+
+        date = next
     }
 
     return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Api from './Api';
 import Intro from './Intro.md';
 import cn from 'classnames';
@@ -6,6 +6,14 @@ import { render } from 'react-dom';
 
 import localizer from 'react-big-calendar/lib/localizers/globalize';
 import globalize from 'globalize';
+import basic from './demos/basic';
+import selectable from './demos/selectable';
+import cultures from './demos/cultures';
+import popup from './demos/popup';
+import rendering from './demos/rendering';
+import customView from './demos/customView';
+import timeslots from './demos/timeslots';
+import dnd from './demos/dnd';
 
 localizer(globalize);
 
@@ -25,14 +33,14 @@ const Example = React.createClass({
   render() {
     let selected = this.state.selected;
     let Current = {
-      basic: require('./demos/basic').default,
-      selectable: require('./demos/selectable').default,
-      cultures: require('./demos/cultures').default,
-      popup: require('./demos/popup').default,
-      rendering: require('./demos/rendering').default,
-      customView: require('./demos/customView').default,
-      timeslots: require('./demos/timeslots').default,
-      dnd: require('./demos/dnd').default,
+      basic: basic,
+      selectable: selectable,
+      cultures: cultures,
+      popup: popup,
+      rendering: rendering,
+      customView: customView,
+      timeslots: timeslots,
+      dnd: dnd,
     }[selected];
 
     return (

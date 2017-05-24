@@ -10,7 +10,8 @@ let Basic = React.createClass({
       <BigCalendar
         {...this.props}
         events={events}
-        views={allViews}
+        view='week'
+        views={['week']}
         defaultDate={new Date(2015, 3, 1)}
       />
     )

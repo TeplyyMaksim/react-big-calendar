@@ -50,8 +50,13 @@ export default class TimeSlotGroup extends Component {
     return ret
   }
   render() {
+    var height = {
+      minHeight: this.props.timeslots * this.props.step +'px'
+    }
     return (
-      <div className="rbc-timeslot-group">
+      <div
+          style={height}
+          className="rbc-timeslot-group">
         {this.renderSlices()}
       </div>
     )
