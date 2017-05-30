@@ -13,7 +13,7 @@ class MyWeek extends Week {
     let { start, end } = MyWeek.range(date, this.props);
 
     return (
-      <TimeGrid {...this.props} start={start} end={end} eventOffset={15} />
+      <TimeGrid {...this.props} start={start} end={end} eventOffset={5} />
     );
   }
 }
