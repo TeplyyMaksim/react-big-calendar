@@ -81,6 +81,11 @@ class Calendar extends React.Component {
    events: PropTypes.arrayOf(PropTypes.object),
 
    /**
+    * An array of resource objects that map events to a specific resource
+    */
+   resources: PropTypes.arrayOf(PropTypes.object),
+
+   /**
     * Callback fired when the `date` value changes.
     *
     * @controllable date

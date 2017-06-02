@@ -28,6 +28,7 @@ export default class TimeGrid extends Component {
 
   static propTypes = {
     events: PropTypes.array.isRequired,
+    resources: PropTypes.array,
 
     step: PropTypes.number,
     range: PropTypes.arrayOf(
@@ -148,6 +149,7 @@ export default class TimeGrid extends Component {
       , allDayAccessor
       , min
       , max
+      , resources
       , areSlotsDynamic } = this.props;
 
     width = width || this.state.gutterWidth;
@@ -183,10 +185,14 @@ export default class TimeGrid extends Component {
 
     let gutterRef = ref => this._gutters[1] = ref && findDOMNode(ref);
 
+    let eventsRendered = resources ?
+        this.renderEventsWithResource(range, rangeEvents, this.props.now, dynamicSlots, resources) :
+        this.renderEvents(range, rangeEvents, this.props.now, dynamicSlots);
+
     return (
       <div className='rbc-time-view'>
 
-        {this.renderHeader(range, allDayEvents, width)}
+        {this.renderHeader(range, allDayEvents, width, resources)}
 
         <div ref='content' className='rbc-time-content'>
           <div ref='timeIndicator' className='rbc-current-time-indicator' />
@@ -199,12 +205,46 @@ export default class TimeGrid extends Component {
             className='rbc-time-gutter'
             dynamicSlots={dynamicSlots}
           />
-
-          {this.renderEvents(range, rangeEvents, this.props.now, dynamicSlots)}
+          {eventsRendered}
 
         </div>
       </div>
     );
+  }
+  renderEventsWithResource(range, events, today, dynamicSlots, resources) {
+    let { min, max, endAccessor, startAccessor, components } = this.props;
+
+    return range.map((date, idx) => {
+      let daysEvents = events.filter(
+          event => dates.inRange(date,
+              get(event, startAccessor),
+              get(event, endAccessor), 'day')
+      )
+
+      return resources.map((resource, id) => {
+
+        let eventsToDisplay = daysEvents.filter(
+            event => event.resourceId === resource.id
+        )
+
+        return (
+            <DayColumn
+                {...this.props }
+                min={dates.merge(date, min)}
+                max={dates.merge(date, max)}
+                eventComponent={components.event}
+                eventWrapperComponent={components.eventWrapper}
+                dayWrapperComponent={components.dayWrapper}
+                className={cn({ 'rbc-now': dates.eq(date, today, 'day') })}
+                style={segStyle(1, this.slots)}
+                key={idx + '-' + id}
+                date={date}
+                events={eventsToDisplay}
+                dynamicSlots={dynamicSlots}
+            />
+        )
+      })
+    })
   }
 
   renderEvents(range, events, today, dynamicSlots){
@@ -239,13 +279,17 @@ export default class TimeGrid extends Component {
     })
   }
 
-  renderHeader(range, events, width) {
+  renderHeader(range, events, width, resources) {
     let { messages, rtl, selectable, components, now } = this.props;
     let { isOverflowing } = this.state || {};
 
     let style = {};
     if (isOverflowing)
       style[rtl ? 'marginLeft' : 'marginRight'] = scrollbarSize() + 'px';
+
+    let headerRendered = resources ?
+        this.renderHeaderResources(range, resources) :
+        message(messages).allDay;
 
     return (
       <div
@@ -263,6 +307,13 @@ export default class TimeGrid extends Component {
           />
           { this.renderHeaderCells(range) }
         </div>
+        { resources && <div className='rbc-row rbc-row-resource'>
+          <div
+              className='rbc-label rbc-header-gutter'
+              style={{ width }}
+          />
+          { headerRendered }
+        </div> }
         <div className='rbc-row'>
           <div
             ref={ref => this._gutters[0] = ref}
@@ -294,6 +345,27 @@ export default class TimeGrid extends Component {
         </div>
       </div>
     )
+  }
+
+  renderHeaderResources(range, resources) {
+    return range.map((date, i) => {
+      return resources.map((resource, j) => {
+        return (
+            <div
+                key={i+ '-' + j}
+                className={cn(
+                    'rbc-header',
+                    dates.isToday(date) && 'rbc-today',
+                )}
+                style={segStyle(1, this.slots)}
+            >
+            <span>
+              {resource.title}
+            </span>
+            </div>
+        )
+        })
+      })
   }
 
   renderHeaderCells(range){

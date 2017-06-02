@@ -22,6 +22,7 @@ export default class TimeColumn extends Component {
     className: PropTypes.string,
     areSlotsDynamic: PropTypes.bool,
     dynamicSlots: PropTypes.array,
+    resource: PropTypes.string,
 
     dayWrapperComponent: elementType,
   }
@@ -36,7 +37,7 @@ export default class TimeColumn extends Component {
     dayWrapperComponent: BackgroundWrapper,
   }
 
-  renderTimeSliceGroup(key, isNow, date, durationInMinutes) {
+  renderTimeSliceGroup(key, isNow, date, durationInMinutes, resource) {
     const { dayWrapperComponent, timeslots, showLabels, step, timeGutterFormat, culture } = this.props;
 
     return (
@@ -47,6 +48,7 @@ export default class TimeColumn extends Component {
         step={step}
         culture={culture}
         timeslots={timeslots}
+        resource={resource}
         showLabels={showLabels}
         timeGutterFormat={timeGutterFormat}
         dayWrapperComponent={dayWrapperComponent}
@@ -56,7 +58,7 @@ export default class TimeColumn extends Component {
   }
 
   render() {
-    const { className, children, style, now, min, max, step, timeslots, areSlotsDynamic, dynamicSlots } = this.props;
+    const { className, children, style, now, min, max, step, timeslots, areSlotsDynamic, dynamicSlots, resource } = this.props;
     const totalMin = dates.diff(min, max, 'minutes')
     const numGroups = Math.ceil(totalMin / (step * timeslots))
     const renderedSlots = []
@@ -74,7 +76,7 @@ export default class TimeColumn extends Component {
         const start = moment(date).hour(slotStart.hour()).minute(slotStart.minute());
         const end = moment(date).hour(slotEnd.hour()).minute(slotEnd.minute());
         const durationInMinutes = end.diff(start, 'minutes');
-        renderedSlots.push(this.renderTimeSliceGroup(j, false, date, durationInMinutes));
+        renderedSlots.push(this.renderTimeSliceGroup(j, false, date, durationInMinutes, resource));
         date = dates.add(date, durationInMinutes, 'minutes');
       }
     } else {
@@ -87,7 +89,7 @@ export default class TimeColumn extends Component {
         )
 
         next = dates.add(date, groupLengthInMinutes, 'minutes');
-        renderedSlots.push(this.renderTimeSliceGroup(i, isNow, date))
+        renderedSlots.push(this.renderTimeSliceGroup(i, isNow, date, resource))
 
         date = next
       }
