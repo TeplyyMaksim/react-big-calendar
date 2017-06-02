@@ -57,6 +57,7 @@ class DaySlot extends React.Component {
     dayWrapperComponent: elementType,
     eventComponent: elementType,
     eventWrapperComponent: elementType.isRequired,
+    resource: React.PropTypes.string
   };
 
   static defaultProps = { dragThroughEvents: true };
@@ -299,6 +300,7 @@ class DaySlot extends React.Component {
       slots,
       start: startDate,
       end: endDate,
+      resourceId: this.props.resource,
       action
     })
   };
