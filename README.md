@@ -7,6 +7,8 @@ An events calendar component built for React and made for modern browsers (read:
 
 Inspired by [Full Calendar](http://fullcalendar.io/).
 
+## NOTE: Critical warning
+If you change files in this repo run `npm run build` before pushing it to the remote
 ## Use and Setup
 
 `npm install react-big-calendar --save`
