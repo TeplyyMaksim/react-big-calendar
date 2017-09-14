@@ -14,6 +14,7 @@ class Toolbar extends React.Component {
     messages: PropTypes.object,
     onNavigate: PropTypes.func.isRequired,
     onViewChange: PropTypes.func.isRequired,
+    additionalContent: PropTypes.node
   }
 
   render() {
@@ -26,21 +27,24 @@ class Toolbar extends React.Component {
         <span className='rbc-btn-group'>
           <button
             type='button'
+            className={cn(`rbc-toolbar-btn-${messages.today.toLowerCase()}`)}
             onClick={this.navigate.bind(null, navigate.TODAY)}
           >
-            {messages.today}
+            <span className="rbc-toolbar-btn-message">{messages.today}</span>
           </button>
           <button
             type='button'
+            className={cn(`rbc-toolbar-btn-${messages.previous.toLowerCase()}`)}
             onClick={this.navigate.bind(null, navigate.PREVIOUS)}
           >
-            {messages.previous}
+            <span className="rbc-toolbar-btn-message">{messages.previous}</span>
           </button>
           <button
             type='button'
+            className={cn(`rbc-toolbar-btn-${messages.next.toLowerCase()}`)}
             onClick={this.navigate.bind(null, navigate.NEXT)}
           >
-            {messages.next}
+            <span className="rbc-toolbar-btn-message">{messages.next}</span>
           </button>
         </span>
 
@@ -53,6 +57,9 @@ class Toolbar extends React.Component {
           this.viewNamesGroup(messages)
         }
         </span>
+
+        {/* NOTE: may be reordered by order style property */}
+        {this.props.additionalContent}
       </div>
     );
   }
@@ -73,10 +80,10 @@ class Toolbar extends React.Component {
       return (
         viewNames.map(name =>
           <button type='button' key={name}
-            className={cn({'rbc-active': view === name})}
+            className={cn(`rbc-toolbar-btn-${name.toLowerCase()}`, {'rbc-active': view === name})}
             onClick={this.view.bind(null, name)}
           >
-            {messages[name]}
+            <span className="rbc-toolbar-btn-message">{messages[name]}</span>
           </button>
         )
       )

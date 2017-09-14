@@ -54,6 +54,8 @@ class EventCell extends React.Component {
           className={cn('rbc-event', className, xClassName, {
             'rbc-selected': selected,
             'rbc-event-allday': isAllDay || dates.diff(start, dates.ceil(end, 'day'), 'day') > 1,
+            [`rbc-event-type-${event.type}`]: event.type,
+            [`rbc-event-feature-${event.resourceId}`]: event.resourceId,
             'rbc-event-continues-prior': continuesPrior,
             'rbc-event-continues-after': continuesAfter
           })}

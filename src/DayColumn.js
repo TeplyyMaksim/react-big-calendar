@@ -174,6 +174,8 @@ class DaySlot extends React.Component {
             onClick={(e) => this._select(event, e)}
             className={cn('rbc-event', className, {
               'rbc-selected': _isSelected,
+              [`rbc-event-type-${event.type}`]: event.type,
+              [`rbc-event-feature-${event.resourceId}`]: event.resourceId,
               'rbc-event-continues-earlier': continuesPrior,
               'rbc-event-continues-later': continuesAfter
             })}

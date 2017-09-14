@@ -442,7 +442,20 @@ class Calendar extends React.Component {
      day: PropTypes.node,
      agenda: PropTypes.node,
      showMore: PropTypes.func
-   })
+   }),
+
+   /**
+    * Optional toolbar extension with external node
+    * NOTE: May be useless and removed if search functionality won't be implemented
+    */
+   toolbarAdditionalContent: PropTypes.node
+
+   /**
+    * TODO: Add here additional content for body
+    * NOTE: I feel that yielding from upper components may
+    * be implement in more elegant way. If you will use
+    * my version of rbc try to make it more elegant
+    */
  };
 
  static defaultProps = {
@@ -542,6 +555,7 @@ class Calendar extends React.Component {
            onViewChange={this.handleViewChange}
            onNavigate={this.handleNavigate}
            messages={this.props.messages}
+           additionalContent={this.props.toolbarAdditionalContent}
          />
        }
        <View
