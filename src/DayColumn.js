@@ -57,7 +57,8 @@ class DaySlot extends React.Component {
     dayWrapperComponent: elementType,
     eventComponent: elementType,
     eventWrapperComponent: elementType.isRequired,
-    resource: React.PropTypes.string
+    resource: React.PropTypes.string,
+    lastDayColumn: React.PropTypes.bool
   };
 
   static defaultProps = { dragThroughEvents: true };
@@ -105,7 +106,8 @@ class DaySlot extends React.Component {
         {...props}
         className={cn(
           'rbc-day-slot',
-          dates.isToday(max) && 'rbc-today'
+          dates.isToday(max) && 'rbc-today',
+          this.props.lastDayColumn && 'rbc-last-day-column'
         )}
         now={now}
         min={min}

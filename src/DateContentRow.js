@@ -157,11 +157,10 @@ class DateContentRow extends React.Component {
       return this.renderDummy();
 
     let { first, last } = endOfRange(range);
-
     let segments = this.segments = events.map(evt => eventSegments(evt, first, last, {
-      startAccessor,
-      endAccessor
-    }))
+        startAccessor,
+        endAccessor
+      }))
 
     let { levels, extra } = eventLevels(segments, Math.max(maxRows - 1, 1));
     while (levels.length < minRows ) levels.push([])

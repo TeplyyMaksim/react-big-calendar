@@ -446,14 +446,17 @@ class Calendar extends React.Component {
 
    /**
     * Optional toolbar extension with external node
-    * NOTE: May be useless and removed if search functionality won't be implemented
     */
-   toolbarAdditionalContent: PropTypes.node
+   toolbarAdditionalContent: PropTypes.node,
 
    /**
-    * TODO: Add here additional content for body
+    * Optional time table first header cell extension with external node
+    */
+   gutterAdditionalContent: PropTypes.node
+
+   /**
     * NOTE: I feel that yielding from upper components may
-    * be implement in more elegant way. If you will use
+    * be implement in more convenient way. If you will use
     * my version of rbc try to make it more elegant
     */
  };

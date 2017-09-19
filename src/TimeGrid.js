@@ -181,7 +181,7 @@ export default class TimeGrid extends Component {
         this.renderEvents(range, rangeEvents, this.props.now);
 
     return (
-      <div className='rbc-time-view'>
+      <div className={cn('rbc-time-view', `rbc-${range.length > 1 ? 'week' : 'day'}-view`)}>
 
         {this.renderHeader(range, allDayEvents, width, resources)}
 
@@ -205,11 +205,12 @@ export default class TimeGrid extends Component {
     let { min, max, endAccessor, startAccessor, components } = this.props;
 
     return range.map((date, idx) => {
-      let daysEvents = events.filter(
-          event => dates.inRange(date,
-              get(event, startAccessor),
-              get(event, endAccessor), 'day')
-      )
+      let daysEvents = events.filter(event =>
+        dates.inRange(date,
+          get(event, startAccessor),
+          get(event, endAccessor), 'day')
+        ),
+        resourcesCount = resources.length;
 
       return resources.map((resource, id) => {
 
@@ -231,6 +232,7 @@ export default class TimeGrid extends Component {
                 key={idx + '-' + id}
                 date={date}
                 events={eventsToDisplay}
+                lastDayColumn={resourcesCount === id + 1}
             />
         )
       })
@@ -287,17 +289,21 @@ export default class TimeGrid extends Component {
         style={style}
       >
         <div className='rbc-row'>
-          <div
-            className='rbc-label rbc-header-gutter'
-            style={{ width }}
-          />
+          <div className='rbc-label rbc-header-gutter' style={{ width }}>
+            {this.props.range.length > 1 || !this.props.resources 
+              ? this.props.gutterAdditionalContent
+              : null}
+            {/* TODO: Make flexible gutter */}
+          </div>
           { this.renderHeaderCells(range) }
         </div>
         { resources && <div className='rbc-row rbc-row-resource'>
-          <div
-              className='rbc-label rbc-header-gutter'
-              style={{ width }}
-          />
+          <div className='rbc-label rbc-header-gutter' style={{ width }}>
+            {this.props.range.length <= 1
+              ? this.props.gutterAdditionalContent 
+              : null}
+            {/* TODO: Make flexible gutter */}        
+          </div>
           { headerRendered }
         </div> }
         <div className='rbc-row'>
